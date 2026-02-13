@@ -8,7 +8,7 @@
 import Foundation
 
 //MARK: ForecastResponce
-struct ForecastResponce: Codable, Sendable {
+struct ForecastData: Codable {
     let cod: String
     let message: Int
     let cnt: Int
@@ -17,7 +17,7 @@ struct ForecastResponce: Codable, Sendable {
 }
 
 //MARK: Forecast Item
-struct ForecastItem: Codable, Sendable, Identifiable {
+struct ForecastItem: Codable, Identifiable {
     let dt: Int
     let main: ForecastMain
     let weather: [Weather]
@@ -41,7 +41,7 @@ struct ForecastItem: Codable, Sendable, Identifiable {
     }
 }
 
-struct ForecastMain: Codable, Sendable {
+struct ForecastMain: Codable {
     let temp, feelsLike, tempMin, tempMax: Double
     let pressure, seaLevel, grndLevel, humidity: Int
     let tempKf: Double
@@ -60,12 +60,12 @@ struct ForecastMain: Codable, Sendable {
 }
 
 //MARK: ForecastSys
-struct ForecastSys: Codable, Sendable {
+struct ForecastSys: Codable {
     let pod: String
 }
 
 //MARK: City
-struct City: Codable, Sendable {
+struct City: Codable {
     let id: Int
     let name: String
     let coord: Coord

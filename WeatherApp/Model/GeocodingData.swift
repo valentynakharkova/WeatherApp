@@ -8,7 +8,7 @@
 import Foundation
 
 //MARK: Geocoding Data
-struct GeocodingData: Codable {
+struct GeocodingData: Codable, Identifiable {
     let name: String
     let localNames: [String: String]?
     let lat: Double
