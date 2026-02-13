@@ -14,9 +14,14 @@ class WeatherViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     
+    @Published var searchResults: [GeocodingData] = []
+    @Published var isSearching: Bool = false
+    
+    @Published var forecastData: ForecastData?
+    
     private let weatherService = WeatherService()
     
-    func getWeather(for city: String) async {
+    func getWeather(for city: String) {
         Task {
             isLoading = true
             errorMessage = nil
@@ -29,5 +34,44 @@ class WeatherViewModel: ObservableObject {
             }
             isLoading = false
         }
+    }
+    
+    func getWeather(lat: Double, lon: Double) {
+        Task {
+            isLoading = true
+            errorMessage = nil
+            
+            do {
+                //MARK: Fetch both weather and forecast in parralel
+                async let weatherTask = try await weatherService.fetchWeather(lat: lat, lon: lon)
+                async let forecastTask = try await weatherService.fetchForecast(lat: lat, lon: lon)
+                
+                let (weather, forecast) = try await (weatherTask, forecastTask)
+                
+                weatherData = weather
+                forecastData = forecast
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+            isLoading = false
+        }
+    }
+    
+    func searchCities(query: String) {
+        Task {
+            isSearching = true
+            
+            do {
+                let cities = try await weatherService.searchCities(query: query)
+                searchResults = cities
+            } catch {
+                searchResults = []
+            }
+            isSearching = false
+        }
+    }
+    
+    func clearSearch() {
+        searchResults = []
     }
 }
