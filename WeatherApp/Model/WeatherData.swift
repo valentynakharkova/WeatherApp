@@ -36,12 +36,12 @@ struct Weather: Codable {
 
 //MARK:
 struct Main: Codable {
-    let temp, feelslike, tempMin, tempMax: Double
+    let temp, feelsLike, tempMin, tempMax: Double
     let pressure, humidity, seaLevel, grndLevel: Int
     
     enum CodingKeys: String, CodingKey {
         case temp
-        case feelslike = "feels_like"
+        case feelsLike = "feels_like"
         case tempMin = "temp_min"
         case tempMax = "temp_max"
         case pressure, humidity

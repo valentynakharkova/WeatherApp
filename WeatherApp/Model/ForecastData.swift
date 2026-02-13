@@ -1,0 +1,77 @@
+//
+//  ForecastData.swift
+//  WeatherApp
+//
+//  Created by Valentyna Kharkova on 13.02.2026.
+//
+
+import Foundation
+
+//MARK: ForecastResponce
+struct ForecastResponce: Codable, Sendable {
+    let cod: String
+    let message: Int
+    let cnt: Int
+    let list: [ForecastItem]
+    let city: City
+}
+
+//MARK: Forecast Item
+struct ForecastItem: Codable, Sendable, Identifiable {
+    let dt: Int
+    let main: ForecastMain
+    let weather: [Weather]
+    let clouds: Clouds
+    let wind: Wind
+    let visibility: Int
+    let pop: Double
+    let sys: ForecastSys
+    let dtTxt: String
+    
+    var id: Int { dt }
+    
+    //Helper to convert timestamp to Date
+    var date: Date {
+        Date(timeIntervalSince1970: TimeInterval(dt))
+    }
+    
+    enum CoceingKeys: String, CodingKey {
+        case dt, main, weather, clouds, wind, visibility, pop, sys
+        case dtTxt = "dt_txt"
+    }
+}
+
+struct ForecastMain: Codable, Sendable {
+    let temp, feelsLike, tempMin, tempMax: Double
+    let pressure, seaLevel, grndLevel, humidity: Int
+    let tempKf: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case temp
+        case feelsLike = "feels_like"
+        case tempMin = "temp_min"
+        case tempMax = "temp_max"
+        case pressure
+        case seaLevel = "sea_level"
+        case grndLevel = "grnd_level"
+        case humidity
+        case tempKf = "temp_kf"
+    }
+}
+
+//MARK: ForecastSys
+struct ForecastSys: Codable, Sendable {
+    let pod: String
+}
+
+//MARK: City
+struct City: Codable, Sendable {
+    let id: Int
+    let name: String
+    let coord: Coord
+    let country: String
+    let population: Int
+    let timezone: Int
+    let sunrise: Int
+    let sunset: Int
+}
