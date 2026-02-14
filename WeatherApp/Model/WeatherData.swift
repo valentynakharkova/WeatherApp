@@ -14,6 +14,8 @@ struct WeatherData: Codable {
     let base: String
     let main: Main
     let visibility: Int
+    let rain: Rain?
+    let snow: Snow?
     let wind: Wind
     let clouds: Clouds
     let dt: Int
@@ -52,7 +54,8 @@ struct Main: Codable {
 
 //MARK: Wind
 struct Wind: Codable {
-    let speed, gust: Double
+    let speed: Double
+    let gust: Double?
     let deg: Int
 }
 
@@ -65,4 +68,26 @@ struct Clouds: Codable {
 struct Sys: Codable {
     let country: String
     let sunrise, sunset: Int
+}
+
+//MARK: Rain
+struct Rain: Codable {
+    let the1H: Double?
+    let the3H: Double?
+    
+    enum CodingKeys: String, CodingKey {
+        case the1H = "1h"
+        case the3H = "3h"
+    }
+}
+
+//MARK: Snow
+struct Snow: Codable {
+    let the1H: Double?
+    let the3H: Double?
+    
+    enum CodingKeys: String, CodingKey {
+        case the1H = "1h"
+        case the3H = "3h"
+    }
 }

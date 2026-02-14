@@ -35,5 +35,15 @@ struct GeocodingData: Codable, Identifiable {
         case localNames = "local_names"
         case lat, lon, country, state
     }
+    
+    init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            name = try container.decode(String.self, forKey: .name)
+            localNames = try? container.decode([String: String].self, forKey: .localNames)
+            lat = try container.decode(Double.self, forKey: .lat)
+            lon = try container.decode(Double.self, forKey: .lon)
+            country = try container.decode(String.self, forKey: .country)
+            state = try? container.decode(String.self, forKey: .state)
+        }
 }
 

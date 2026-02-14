@@ -31,6 +31,12 @@ class WeatherService {
             throw NSError(domain: "Invalid URL", code: 0)
         }
         let (data, _) = try await URLSession.shared.data(from: url)
+        
+        if let jsonString = String(data: data, encoding: .utf8) {
+                print("🌤️ Weather API Response:")
+                print(jsonString)
+            }
+        
         let weatherData = try JSONDecoder().decode(WeatherData.self, from: data)
         
         return weatherData
@@ -41,11 +47,17 @@ class WeatherService {
         guard query.count >= 2 else {
             return []
         }
-        let urlString = "http://api.openweathermap.org/geo/1.0/direct?q=\(query)&limit=5&appid=\(apiKey)"
+        let urlString = "https://api.openweathermap.org/geo/1.0/direct?q=\(query)&limit=5&appid=\(apiKey)"
         guard let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") else {
             throw NSError(domain: "Invalid URL", code: 0)
         }
         let (data, _) = try await URLSession.shared.data(from: url)
+        
+        if let jsonString = String(data: data, encoding: .utf8) {
+                print("🔍 Geocoding API Response:")
+                print(jsonString)
+            }
+        
         let cities = try JSONDecoder().decode([GeocodingData].self, from: data)
         
         return cities
@@ -58,6 +70,13 @@ class WeatherService {
             throw NSError(domain: "Invalid URL", code: 0)
         }
         let (data, _) = try await URLSession.shared.data(from: url)
+        
+        // DEBUG: Print the raw response
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("📅 Forecast API Response:")
+                print(jsonString)
+            }
+        
         let forecastData = try JSONDecoder().decode(ForecastData.self, from: data)
         
         return forecastData

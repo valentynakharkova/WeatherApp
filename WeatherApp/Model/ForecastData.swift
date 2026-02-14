@@ -7,7 +7,7 @@
 
 import Foundation
 
-//MARK: ForecastResponce
+//MARK: Forecast Data
 struct ForecastData: Codable {
     let cod: String
     let message: Int
@@ -25,18 +25,20 @@ struct ForecastItem: Codable, Identifiable {
     let wind: Wind
     let visibility: Int
     let pop: Double
+    let rain: Rain?
+    let snow: Snow?
     let sys: ForecastSys
     let dtTxt: String
     
     var id: Int { dt }
     
-    //Helper to convert timestamp to Date
+    //MARK: Helper to convert timestamp to Date
     var date: Date {
         Date(timeIntervalSince1970: TimeInterval(dt))
     }
     
-    enum CoceingKeys: String, CodingKey {
-        case dt, main, weather, clouds, wind, visibility, pop, sys
+    enum CodingKeys: String, CodingKey {
+        case dt, main, weather, clouds, wind, visibility, pop, rain, snow, sys
         case dtTxt = "dt_txt"
     }
 }
