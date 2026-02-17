@@ -13,18 +13,19 @@ struct HourlyForecastView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("hourly forecast".uppercased())
+            Text("HOURLY FORECAST")
                 .font(.callout)
                 .foregroundStyle(.thinMaterial)
                 
-            ScrollView(.horizontal) {
-                HStack(spacing: 16) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
                     ForEach(forecast.list.prefix(8)) { item in
-                        
+                        HourlyForecastCard(item: item)
                     }
                 }
             }
         }
+        .padding(.horizontal, 10)
     }
 }
 
