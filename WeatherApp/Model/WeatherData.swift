@@ -72,22 +72,22 @@ struct Sys: Codable {
 
 //MARK: Rain
 struct Rain: Codable {
-    let the1H: Double?
-    let the3H: Double?
+    let oneHour: Double?
+    let threeHours: Double?
     
     enum CodingKeys: String, CodingKey {
-        case the1H = "1h"
-        case the3H = "3h"
+        case oneHour = "1h"
+        case threeHours = "3h"
     }
 }
 
 //MARK: Snow
 struct Snow: Codable {
-    let the1H: Double?
-    let the3H: Double?
+    let oneHour: Double?
+    let threeHours: Double?
     
     enum CodingKeys: String, CodingKey {
-        case the1H = "1h"
-        case the3H = "3h"
+        case oneHour = "1h"
+        case threeHours = "3h"
     }
 }
