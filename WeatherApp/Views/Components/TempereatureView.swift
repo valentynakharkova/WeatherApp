@@ -9,10 +9,10 @@ import SwiftUI
 
 struct TempereatureView: View {
     
-    let viewModel = WeatherViewModel()
+    let weather: WeatherData
     
     var body: some View {
-        if let weather = viewModel.weatherData  {
+        ZStack {
             VStack(spacing: 0) {
                 Text(weather.name)
                     .font(.system(size: 35, weight: .medium))
@@ -21,9 +21,7 @@ struct TempereatureView: View {
                 Text("\(Int(weather.main.temp))°")
                     .font(.system(size: 100, weight: .thin))
                     .foregroundStyle(.white)
-                //                                Text("\(weather.weather.first?.description.capitalized ?? "")")
-                //                                    .font(.headline)
-                //                                    .foregroundStyle(.white)
+            
                 Text("Feels like: \(Int(weather.main.feelsLike))°")
                     .font(.headline)
                     .foregroundStyle(.white)
@@ -40,5 +38,8 @@ struct TempereatureView: View {
 }
 
 #Preview {
-    TempereatureView()
+    ZStack {
+        BackgroundGradient()
+        TempereatureView(weather: .mock)
+    }
 }

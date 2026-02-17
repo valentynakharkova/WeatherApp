@@ -8,8 +8,14 @@
 import SwiftUI
 
 struct CitiesListView: View {
+    
+    let viewModel = WeatherViewModel()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            // background
+            BackgroundGradient(weather: viewModel.weatherData)
+        }
     }
 }
 
