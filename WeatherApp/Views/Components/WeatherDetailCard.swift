@@ -14,15 +14,17 @@ struct WeatherDetailCard: View {
     let value: String
     
     var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 28))
-                .foregroundStyle(.white)
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(.white.opacity(0.8))
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 5) {
+                Image(systemName: icon)
+                Text(title.uppercased())
+            }
+            .font(.callout)
+            .fontWeight(.medium)
+            .foregroundStyle(.white.opacity(0.5))
+
             Text(value)
-                .font(.title3)
+                .font(.title)
                 .fontWeight(.semibold)
                 .foregroundStyle(.white)
         }
