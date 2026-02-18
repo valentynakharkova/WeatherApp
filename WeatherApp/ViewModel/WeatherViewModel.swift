@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-//@MainActor
+@MainActor
 class WeatherViewModel: ObservableObject {
     @Published var weatherData: WeatherData?
     @Published var isLoading: Bool = false

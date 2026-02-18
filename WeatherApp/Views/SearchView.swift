@@ -50,7 +50,10 @@ struct SearchView: View {
                             VStack(spacing: 8) {
                                 ForEach(viewModel.searchResults) { city in
                                     Button {
-                                        print("Selected: \(city.name)")
+                                        SavedCityManager.shared.saveCity(city)
+                                        viewModel.getWeather(lat: city.lat, lon: city.lon)
+                                        viewModel.clearSearch()
+                                        searchQuery = ""
                                         dismiss()
                                     } label: {
                                         HStack(alignment: .firstTextBaseline, spacing: 4) {
@@ -90,5 +93,5 @@ struct SearchView: View {
 }
 
 #Preview {
-    SearchView(viewModel: .init())
+    SearchView(viewModel: WeatherViewModel())
 }

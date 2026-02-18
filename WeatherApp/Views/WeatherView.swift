@@ -9,11 +9,20 @@ import SwiftUI
 
 struct WeatherView: View {
     
-    @StateObject private var viewModel = WeatherViewModel()
+    @StateObject private var viewModel: WeatherViewModel
     
-    init(viewModel: WeatherViewModel = WeatherViewModel()) {
+    @State private var searchID = UUID()
+    
+    init() {
+        _viewModel = StateObject(wrappedValue: WeatherViewModel())
+    }
+    
+    init(viewModel: WeatherViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
+//    init(viewModel: WeatherViewModel = WeatherViewModel()) {
+//        _viewModel = StateObject(wrappedValue: viewModel)
+//    }
     
     var body: some View {
         NavigationStack {
@@ -46,7 +55,8 @@ struct WeatherView: View {
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         NavigationLink {
-                            CitiesListView()
+                            CitiesListView(viewModel: viewModel)
+                                .id(searchID)
                         } label: {
                             Image(systemName: "list.bullet")
                         }
@@ -60,6 +70,9 @@ struct WeatherView: View {
                         }
                     }
                 }
+            }
+            .onAppear {
+                searchID = UUID()
             }
         }
         
