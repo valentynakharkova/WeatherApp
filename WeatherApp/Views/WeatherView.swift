@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import Combine
 
 struct WeatherView: View {
     
-    @StateObject private var viewModel: WeatherViewModel
+    @StateObject private var viewModel = WeatherViewModel()
     
     @State private var searchID = UUID()
-    
+        
     init() {
         _viewModel = StateObject(wrappedValue: WeatherViewModel())
     }
@@ -20,9 +21,6 @@ struct WeatherView: View {
     init(viewModel: WeatherViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
-//    init(viewModel: WeatherViewModel = WeatherViewModel()) {
-//        _viewModel = StateObject(wrappedValue: viewModel)
-//    }
     
     var body: some View {
         NavigationStack {
@@ -61,14 +59,6 @@ struct WeatherView: View {
                             Image(systemName: "list.bullet")
                         }
                     }
-                    
-                    ToolbarItem(placement: .topBarTrailing) {
-                        NavigationLink {
-                            SearchView(viewModel: viewModel)
-                        } label: {
-                            Image(systemName: "magnifyingglass")
-                        }
-                    }
                 }
             }
             .onAppear {
@@ -81,7 +71,7 @@ struct WeatherView: View {
 
 
 #Preview {
-    WeatherView(viewModel: .init())
+    WeatherView()
         
 }
 

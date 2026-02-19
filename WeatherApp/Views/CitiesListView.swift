@@ -22,7 +22,6 @@ struct CitiesListView: View {
                 // background
                 BackgroundGradient(weather: viewModel.weatherData)
                 
-                ScrollView {
                     VStack {
                         HStack(spacing: 12) {
                             Image(systemName: "magnifyingglass")
@@ -46,19 +45,18 @@ struct CitiesListView: View {
                         Spacer()
                         
                         //MARK: Search Results
-                        if !viewModel.searchResults.isEmpty {
-                            ScrollView {
+                        ScrollView {
+                            if !viewModel.searchResults.isEmpty {
                                 searchResults
-                            }
-                            
-                            if citiesManager.savedCities.isEmpty {
+                            } else if !citiesManager.savedCities.isEmpty {
+                                citiesList
+                            } else {
                                 emptyState
                             }
-                        } else {
-                            Spacer()
+                            
                         }
+                        
                     }
-                }
             }
             .navigationTitle("Cities")
             .navigationBarTitleDisplayMode(.inline)
