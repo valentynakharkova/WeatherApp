@@ -58,8 +58,15 @@ struct CitiesListView: View {
                         
                     }
             }
-            .navigationTitle("Cities")
-            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .title) {
+                    Text("WEATHER")
+                        .font(.largeTitle)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                }
+            }
+            
         }
     }
     

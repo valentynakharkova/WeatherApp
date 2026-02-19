@@ -51,7 +51,7 @@ struct WeatherView: View {
                     }
                 }
                 .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
+                    ToolbarItem(placement: .bottomBar) {
                         NavigationLink {
                             CitiesListView(viewModel: viewModel)
                                 .id(searchID)
