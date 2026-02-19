@@ -19,6 +19,9 @@ class WeatherViewModel: ObservableObject {
     
     @Published var forecastData: ForecastData?
     
+    @Published var savedCitiesWeather: [String : WeatherData] = [:]
+    @Published var savedCitiesForecast: [String : ForecastData] = [:]
+    
     private let weatherService = WeatherService()
     
     func getWeather(for city: String) {
@@ -73,5 +76,20 @@ class WeatherViewModel: ObservableObject {
     
     func clearSearch() {
         searchResults = []
+    }
+    
+    func loadCitiesWeather(city: GeocodingData) async {
+        do {
+            async let weatherTask = weatherService.fetchWeather(lat: city.lat, lon: city.lon)
+            async let forecastTask = weatherService.fetchForecast(lat: city.lat, lon: city.lon)
+
+            let (weather, forecast) = try await (weatherTask, forecastTask)
+            
+            savedCitiesWeather[city.id] = weather
+            savedCitiesForecast[city.id] = forecast
+            
+        } catch {
+            print("Error fetching weather for city: \(error)")
+        }
     }
 }
