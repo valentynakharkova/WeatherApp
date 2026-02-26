@@ -7,12 +7,15 @@
 
 import SwiftUI
 
-struct Modifiers: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct Modifiers: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .foregroundStyle(.white.opacity(0.5))
     }
 }
 
-#Preview {
-    Modifiers()
+extension View {
+    func colorModifier() -> some View {
+        modifier(Modifiers())
+    }
 }
