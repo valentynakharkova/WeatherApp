@@ -1,4 +1,3 @@
-
 //  CitiesListView.swift
 //  WeatherApp
 //
@@ -13,61 +12,84 @@ struct CitiesListView: View {
     @Environment(\.dismiss) var dismiss
     
     @ObservedObject var viewModel: WeatherViewModel
-    @ObservedObject var citiesManager = SavedCityManager.shared
+    @ObservedObject private var citiesManager = SavedCityManager.shared
+    
+    @Binding var selectedCityIndex: Int
     @State private var searchQuery: String = ""
     
     var body: some View {
-        NavigationStack {
-            ZStack {
+        ZStack(alignment: .top) {
                 // background
-                BackgroundGradient(weather: viewModel.weatherData)
-                
-                    VStack {
-                        HStack(spacing: 12) {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundStyle(.thinMaterial)
-                            
-                            TextField("Search for cities...", text: $searchQuery)
-                                .foregroundStyle(.white)
-                                .onChange(of: searchQuery) { oldValue, newValue in
-                                    if newValue.count > 2 {
-                                        viewModel.searchCities(query: newValue)
-                                    } else {
-                                        viewModel.clearSearch()
-                                    }
-                                }
+                if let currentWeather = currentCityWeather {
+                    BackgroundGradient(weather: currentWeather)
+                } else {
+                    BackgroundGradient()
+                }
+                VStack(spacing: 30) {
+                    searchBar
+                        .padding(.top, 16)
+                    ScrollView {
+                        if !viewModel.searchResults.isEmpty {
+                            searchResults
+//                                .listRowBackground(Color(.clear))
+//                                .listRowSeparator(.hidden)
+//                                .listRowInsets(EdgeInsets())
+                        } else if citiesManager.savedCities.isEmpty {
+                            emptyState
+//                                .listRowBackground(Color(.clear))
+//                                .listRowSeparator(.hidden)
+//                                .frame(maxWidth: .infinity)
+//                                .padding(.top, 60)
+                        } else {
+                            citiesList
+//                                .listRowBackground(Color(.clear))
+//                                .listRowSeparator(.hidden)
                         }
-                        .padding()
-                        .background(.white.opacity(0.15))
-                        .cornerRadius(12)
-                        .padding()
-                        
-                        Spacer()
-                        
-                        //MARK: Search Results
-                        ScrollView {
-                            if !viewModel.searchResults.isEmpty {
-                                searchResults
-                            } else if !citiesManager.savedCities.isEmpty {
-                                citiesList
-                            } else {
-                                emptyState
-                            }
-                            
-                        }
-                        
                     }
-            }
-            .toolbar {
-                ToolbarItem(placement: .title) {
-                    Text("WEATHER")
-                        .font(.largeTitle)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.white)
+                    .padding(.horizontal)
+//                    .listStyle(.plain)
+//                    .scrollContentBackground(.hidden)
                 }
             }
-            
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("WEATHER")
+                    .font(.largeTitle)
+                    .foregroundStyle(.white)
+            }
         }
+        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    //MARK: Search Bar
+    private var searchBar: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "magnifyingglass")
+                .colorModifier()
+            
+            TextField("Search for cities...", text: $searchQuery)
+                .foregroundStyle(.white)
+                .onChange(of: searchQuery) { oldValue, newValue in
+                    if newValue.count > 2 {
+                        viewModel.searchCities(query: newValue)
+                    } else {
+                        viewModel.clearSearch()
+                    }
+                }
+            if !searchQuery.isEmpty {
+                Button {
+                    searchQuery = ""
+                    viewModel.clearSearch()
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .colorModifier()
+                }
+            }
+        }
+        .padding()
+        .background(.white.opacity(0.15))
+        .cornerRadius(12)
+        .padding(.horizontal)
     }
     
     //MARK: Empty state
@@ -89,28 +111,63 @@ struct CitiesListView: View {
     
     // MARK: Cities List
     private var citiesList: some View {
-        ScrollView {
-            VStack(spacing: 12) {
-                ForEach(citiesManager.savedCities) { city in
-                    CityRow(city: city) {
-                        //Tap to show weather
-                        viewModel.getWeather(lat: city.lat, lon: city.lon)
-                        dismiss()
-                    }
+        ForEach(citiesManager.savedCities) { city in
+            if let weather = viewModel.savedCitiesWeather[city.id] {
+                CityRow(city: city,weather: weather) {
+                    if let index = citiesManager.savedCities.firstIndex(where: {$0.id == city.id}) {
+                            selectedCityIndex = index
+                            dismiss()
+                        }
                 }
+            } else {
+                loadingRow(for: city)
             }
-            .padding()
+        }
+        .onDelete(perform: deleteCity)
+        .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+    }
+    
+    //MARK: Delete City
+    private func deleteCity(at offsets: IndexSet) {
+        offsets.forEach { index in
+            let city = citiesManager.savedCities[index]
+            citiesManager.removeCity(city)
+        }
+        
+        // Safety check: Ensure selectedCityIndex isn't out of bounds after deletion
+        if selectedCityIndex >= citiesManager.savedCities.count {
+            selectedCityIndex = max(0, citiesManager.savedCities.count - 1)
+        }
+    }
+    private func loadingRow(for city: GeocodingData) -> some View {
+        HStack {
+            Text(city.name)
+                .font(.title3)
+                .foregroundStyle(.white)
+            Spacer()
+            ProgressView().tint(.white)
+        }
+        .frame(height: 80)
+        .padding()
+        .background(Color.white.opacity(0.1))
+        .cornerRadius(12)
+        .task {
+            await viewModel.loadCitiesWeather(city: city)
         }
     }
     //MARK: Search Results
     private var searchResults: some View {
-        VStack(spacing: 8) {
             ForEach(viewModel.searchResults) { city in
+                let alreadySaved = citiesManager.savedCities.contains(where: {$0.name == city.name && $0.country == city.country })
+                let atLimit = citiesManager.savedCities.count >= 5
+                
                 Button {
-                    SavedCityManager.shared.saveCity(city)
-                    viewModel.getWeather(lat: city.lat, lon: city.lon)
-                    viewModel.clearSearch()
+                    guard !alreadySaved && !atLimit else { return }
+                    citiesManager.saveCity(city)
                     searchQuery = ""
+                    Task {
+                        await viewModel.loadCitiesWeather(city: city)
+                    }
                     dismiss()
                 } label: {
                     HStack(alignment: .firstTextBaseline, spacing: 4) {
@@ -119,27 +176,49 @@ struct CitiesListView: View {
                             .foregroundStyle(.white)
                         Text(city.displayName)
                             .font(.subheadline)
-                            .foregroundStyle(.thinMaterial)
+                            .colorModifier()
                         
                         Spacer()
                         
-                        Image(systemName: "chevron.right")
-                            .foregroundStyle(.white.opacity(0.5))
+                        if alreadySaved {
+                            Text("Saved")
+                                .font(.caption)
+                                .colorModifier()
+                        } else if atLimit {
+                            Text("Limit reached")
+                                .font(.caption)
+                                .colorModifier()
+                        } else {
+                            Image(systemName: "chevron.right")
+                                .colorModifier()
+                        }
                     }
                     .padding()
                     .frame(maxWidth: .infinity)
                     .frame(height: 55)
-                    .background(Color.white.opacity(0.1))
+                    .background(Color.white.opacity(alreadySaved || atLimit ? 0.05 : 0.1))
                     .cornerRadius(12)
-                    .padding(.horizontal)
                 }
+                .disabled(alreadySaved || atLimit)
+                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
             }
         }
+    //MARK: Current City Weather for background
+    private var currentCityWeather: WeatherData? {
+        guard selectedCityIndex < citiesManager.savedCities.count else { return nil }
+        let city = citiesManager.savedCities[selectedCityIndex]
+        return viewModel.savedCitiesWeather[city.id]
     }
 }
 
 
 
 #Preview {
-    CitiesListView(viewModel: WeatherViewModel())
+    @Previewable @StateObject var viewModel = WeatherViewModel()
+    @Previewable @State var selectedCityIndex = 0
+    NavigationStack {
+        CitiesListView(viewModel: viewModel, selectedCityIndex: $selectedCityIndex)
+    }
+    
 }
+
