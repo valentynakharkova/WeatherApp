@@ -15,18 +15,18 @@ struct DailyForecastView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("5-DAY FORECAST")
                 .font(.callout)
-                .foregroundStyle(.thinMaterial)
-                .padding(.horizontal, 20)
+                .colorModifier()
             
             VStack(spacing: 12) {
                 ForEach(getDailyForecast()) { item in
                     DailyForecastRow(item: item)
                 }
             }
-            .padding(.horizontal, 20)
+//            .padding()
+//            .padding(.horizontal, 20)
             
         }
-        .padding(.top, 30)
+        .padding()
     }
     
     private func getDailyForecast() -> [ForecastItem] {
