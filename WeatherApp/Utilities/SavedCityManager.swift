@@ -12,7 +12,7 @@ class SavedCityManager: ObservableObject {
     
     static let shared = SavedCityManager()
     
-    @Published var savedCities: [GeocodingData] = []
+    @Published private(set) var savedCities: [GeocodingData] = []
     
     private let maxCities = 5
     private let saveKey = "saveKey"
@@ -25,9 +25,7 @@ class SavedCityManager: ObservableObject {
         // Don't save dublicats
         if savedCities.contains(where: { $0.name == city.name && $0.country == city.country }) { return }
                 
-        if savedCities.count > maxCities {
-            savedCities.removeFirst()
-        }
+        guard savedCities.count < maxCities else { return }
         
         savedCities.append(city)
         persist()
@@ -39,17 +37,15 @@ class SavedCityManager: ObservableObject {
     }
     
     private func persist() {
-        if let encoder = try? JSONEncoder().encode(savedCities) {
-            UserDefaults.standard.set(encoder, forKey: saveKey)
+        if let encoded = try? JSONEncoder().encode(savedCities) {
+            UserDefaults.standard.set(encoded, forKey: saveKey)
         }
     }
     
     private func load() {
         guard let data = UserDefaults.standard.data(forKey: saveKey),
               let decoded = try? JSONDecoder().decode([GeocodingData].self, from: data) else { return }
-        
         savedCities = decoded
-
     }
     
 }
