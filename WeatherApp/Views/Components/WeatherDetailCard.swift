@@ -19,17 +19,19 @@ struct WeatherDetailCard: View {
                 Image(systemName: icon)
                 Text(title.uppercased())
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .font(.callout)
             .fontWeight(.medium)
-            .foregroundStyle(.white.opacity(0.5))
+            .colorModifier()
 
             Text(value)
                 .font(.title)
                 .fontWeight(.semibold)
                 .foregroundStyle(.white)
         }
+        .padding()
         .frame(maxWidth: .infinity)
-        .frame(height: 120)
+        .frame(height: 100)
         .background(.white.opacity(0.1))
         .cornerRadius(16)
     }
@@ -38,12 +40,32 @@ struct WeatherDetailCard: View {
 #Preview {
     ZStack {
         BackgroundGradient()
-        WeatherDetailCard(
-            icon: "humidity.fill",
-            title: "Humidity",
-            value: "65%"
-        )
-        .frame(width: 160)
-        .padding()
+        LazyVGrid(columns: [
+            GridItem(.flexible()),
+            GridItem(.flexible())
+            ]) {
+                WeatherDetailCard(
+                    icon: "sunset.fill",
+                    title: "Sunset",
+                    value: "18.30"
+                )
+                WeatherDetailCard(
+                    icon: "humidity.fill",
+                    title: "Humidity",
+                    value: "10%"
+                )
+                WeatherDetailCard(
+                    icon: "wind",
+                    title: "Wind Speed",
+                    value: "20 m/s"
+                )
+                WeatherDetailCard(
+                    icon: "gauge.medium",
+                    title: "Pressure",
+                    value: "1000 hPa"
+                )
+
+        }
+        
     }
 }

@@ -14,10 +14,8 @@ struct WeatherDetailsGrid: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("WEATHER DETAILS")
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundStyle(.white.opacity(0.8))
-                .padding(.horizontal, 20)
+                .font(.callout)
+                .colorModifier()
             
             LazyVGrid(columns: [
                 GridItem(.flexible()),
@@ -27,6 +25,11 @@ struct WeatherDetailsGrid: View {
                     icon: "thermometer.medium",
                     title: "Feels like",
                     value: "\(Int(weather.main.feelsLike))°"
+                )
+                WeatherDetailCard(
+                    icon: "eye.fill",
+                    title: "Visibility",
+                    value: weather.visibility.map { "\($0 / 1000) km"} ?? "--"
                 )
                 WeatherDetailCard(
                     icon: "sunrise.fill",
@@ -54,19 +57,14 @@ struct WeatherDetailsGrid: View {
                     value: "\(weather.main.pressure) hPa"
                 )
                 WeatherDetailCard(
-                    icon: "eye.fill",
-                    title: "Visibility",
-                    value: "\(weather.visibility / 1000) km"
-                )
-                WeatherDetailCard(
                     icon: "cloud.fill",
                     title: "Clouds",
-                    value: "\(weather.clouds.all)%"
+                    value: "\(weather.clouds.all)% "
                 )
                 
             }
         }
-        .padding(10)
+        .padding(.horizontal)
     }
 }
 

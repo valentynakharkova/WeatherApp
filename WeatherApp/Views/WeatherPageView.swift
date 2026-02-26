@@ -27,6 +27,7 @@ struct WeatherPageView: View {
                 
                 WeatherDetailsGrid(weather: weather)
             }
+            .padding(.bottom, 60)
         }
     }
 }
