@@ -49,61 +49,70 @@ struct DailyForecastRow: View {
     }
     
     var body: some View {
-        HStack(spacing: 20) {
+        HStack(spacing: 0) {
             // Day of week
             HStack(spacing: 16) {
                 Text(dayOfWeek.uppercased())
                     .font(.body)
                     .fontWeight(.medium)
-                    .foregroundStyle(.thinMaterial)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .colorModifier()
+                    .frame(width: 60, alignment: .leading)
+                
+                Spacer()
                 
                 // Weather icon
                 Image(systemName: weatherIcon)
                     .font(.title3)
                     .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            
-            // Temperature range
-            HStack(spacing: 10) {
-
-                // Low temp
-                Text("\(Int(item.main.tempMin))°")
-                    .font(.body)
-                    .foregroundStyle(.white)
+                    .frame(width: 40, alignment: .center)
                 
-                // Temperature bar (visual indicator)
-                RoundedRectangle(cornerRadius: 2)
-                    .fill(
-                        LinearGradient(
-                            colors: [.blue.opacity(0.5), .orange.opacity(0.5)],
-                            startPoint: .leading,
-                            endPoint: .trailing
+                Spacer()
+                
+                // Temperature range
+                HStack(spacing: 8) {
+                    
+                    // Low temp
+                    Text("\(Int(item.main.tempMin))°")
+                        .font(.body)
+                        .foregroundStyle(.white)
+                        .frame(width: 35, alignment: .trailing)
+                    
+                    // Temperature bar (visual indicator)
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(
+                            LinearGradient(
+                                colors: [.blue.opacity(0.7), .orange.opacity(0.7)],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
                         )
-                    )
-                    .frame(width: 80, height: 4)
-                
-                // High temp
-                Text("\(Int(item.main.tempMax))°")
-                    .font(.body)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
+                        .frame(width: 80, height: 4)
+                    
+                    // High temp
+                    Text("\(Int(item.main.tempMax))°")
+                        .font(.body)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                        .frame(width: 35, alignment: .leading)
+                }
             }
+            .padding(.vertical, 12)
+            .padding(.horizontal, 16)
+            .background(.white.opacity(0.1))
+            .cornerRadius(12)
+            
         }
-//        .frame(maxWidth: .infinity)
-
-        .padding(.vertical, 12)
-        .padding(.horizontal, 16)
-        .background(.white.opacity(0.1))
-        .cornerRadius(12)
-
     }
 }
 
 #Preview {
     ZStack {
         BackgroundGradient()
-        DailyForecastRow(item: ForecastData.mock.list[0])
+        VStack(spacing: 12) {
+            DailyForecastRow(item: ForecastData.mock.list[0])
+            DailyForecastRow(item: ForecastData.mock.list[1])
+            DailyForecastRow(item: ForecastData.mock.list[2])
+        }
+        .padding()
     }
 }
