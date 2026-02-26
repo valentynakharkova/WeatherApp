@@ -18,7 +18,7 @@ struct GeocodingData: Codable, Identifiable {
     
     //MARK: For SwiftUI List - makes each item unique
     var id: String {
-        "\(name)-\(country)-\(lat)-\(lon)"
+        "\(name)-\(country)-\(String(format: "%.4f", lat))-\(String(format: "%.4f", lon))"
     }
     
     //MARK: Display name with country
