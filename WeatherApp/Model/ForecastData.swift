@@ -23,7 +23,7 @@ struct ForecastItem: Codable, Identifiable {
     let weather: [Weather]
     let clouds: Clouds
     let wind: Wind
-    let visibility: Int
+    let visibility: Int?
     let pop: Double
     let rain: Rain?
     let snow: Snow?
