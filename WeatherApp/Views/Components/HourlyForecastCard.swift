@@ -9,14 +9,40 @@ import SwiftUI
 
 struct HourlyForecastCard: View {
     
+    @ObservedObject private var tempSettings = TemperatureSettings.shared
+    
     let item: ForecastItem
     
+    var body: some View {
+        VStack(spacing: 12) {
+            Text(timeString)
+                .font(.caption)
+                .fontWeight(.medium)
+                .foregroundStyle(.white.opacity(0.8))
+            
+            Image(systemName: weatherIcon)
+                .font(.system(size: 28))
+                .foregroundStyle(.white)
+                .frame(height: 28)
+            
+            Text(tempSettings.format(item.main.temp))
+                .font(.title3)
+                .fontWeight(.semibold)
+                .foregroundStyle(.white)
+        }
+        .frame(width: 70)
+        .padding(.vertical, 16)
+        .background(.white.opacity(0.15))
+        .cornerRadius(20)
+    }
+    
+    //MARK: Time String
     private var timeString: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         return formatter.string(from: item.date)
     }
-    
+    //MARK: Weather Icon
     private var weatherIcon: String {
         guard let main = item.weather.first?.main else { return "cloud.fill" }
         
@@ -38,29 +64,6 @@ struct HourlyForecastCard: View {
         default:
             return "cloud.fill"
         }
-    }
-    
-    var body: some View {
-        VStack(spacing: 12) {
-            Text(timeString)
-                .font(.caption)
-                .fontWeight(.medium)
-                .foregroundStyle(.white.opacity(0.8))
-            
-            Image(systemName: weatherIcon)
-                .font(.system(size: 28))
-                .foregroundStyle(.white)
-                .frame(height: 28)
-            
-            Text("\(Int(item.main.temp))°")
-                .font(.title3)
-                .fontWeight(.semibold)
-                .foregroundStyle(.white)
-        }
-        .frame(width: 70)
-        .padding(.vertical, 16)
-        .background(.white.opacity(0.15))
-        .cornerRadius(20)
     }
 }
 

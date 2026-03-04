@@ -34,12 +34,12 @@ struct WeatherDetailsGrid: View {
                 WeatherDetailCard(
                     icon: "sunrise.fill",
                     title: "Sunrise",
-                    value: "\(weather.sys.sunrise.toTimeString())"
+                    value: "\(weather.formatTime(weather.sys.sunrise))"
                 )
                 WeatherDetailCard(
                     icon: "sunset.fill",
                     title: "Sunset",
-                    value: "\(weather.sys.sunset.toTimeString())"
+                    value: "\(weather.formatTime(weather.sys.sunset))"
                 )
                 WeatherDetailCard(
                     icon: "humidity.fill",

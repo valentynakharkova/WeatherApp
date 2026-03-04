@@ -12,6 +12,12 @@ struct CityRow: View {
     let city: GeocodingData
     let weather: WeatherData
     let onTap: () -> Void
+    let onDelete: () -> Void
+    
+    @ObservedObject private var tempSetting = TemperatureSettings.shared
+    
+    @State private var isPressed = false
+    @State private var offset: CGFloat = 0
     
     var body: some View {
         Button {
@@ -27,7 +33,7 @@ struct CityRow: View {
                         .colorModifier()
                 }
                 Spacer()
-                Text("\(Int(weather.main.temp))°")
+                Text(tempSetting.format(weather.main.temp))
                     .font(.system(size: 50, weight: .thin))
                     .foregroundStyle(.white)
             }
@@ -37,7 +43,12 @@ struct CityRow: View {
             .background(Color.white.opacity(0.1))
             .cornerRadius(12)
         }
-//        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+            Button(role: .destructive, action: onDelete) {
+                Label("Delete", systemImage: "trash")
+            }
+        }
     }
 }
 
@@ -45,11 +56,10 @@ struct CityRow: View {
     ZStack {
         BackgroundGradient()
         VStack(spacing: 12) {
-            CityRow(city: .mockKyiv, weather: .mock, onTap: {})
-            CityRow(city: .mockZaporizhzhia, weather: .mock, onTap: {})
-            CityRow(city: .mockKyiv, weather: .mock, onTap: {})
-            CityRow(city: .mockZaporizhzhia, weather: .mock, onTap: {})
-            CityRow(city: .mockKyiv, weather: .mock, onTap: {})
+            CityRow(city: .mockKyiv, weather: .mock, onTap: {}, onDelete: {})
+            CityRow(city: .mockZaporizhzhia, weather: .mock, onTap: {}, onDelete: {})
+            CityRow(city: .mockKyiv, weather: .mock, onTap: {}, onDelete: {})
+            
         }
         .padding()
     }

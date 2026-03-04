@@ -9,44 +9,9 @@ import SwiftUI
 
 struct DailyForecastRow: View {
     
+    @ObservedObject private var tempSettings = TemperatureSettings.shared
+    
     let item: ForecastItem
-    
-    private var dayOfWeek: String {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let itemDate = calendar.startOfDay(for: item.date)
-        
-        if today == itemDate {
-            return "Today"
-        }
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EE" // Full day name
-        return formatter.string(from: item.date)
-    }
-    
-    private var weatherIcon: String {
-        guard let main = item.weather.first?.main else { return "cloud.fill" }
-        
-        switch main.lowercased() {
-        case "clear":
-            return "sun.max.fill"
-        case "clouds":
-            return "cloud.fill"
-        case "rain":
-            return "cloud.rain.fill"
-        case "drizzle":
-            return "cloud.drizzle.fill"
-        case "thunderstorm":
-            return "cloud.bolt.fill"
-        case "snow":
-            return "cloud.snow.fill"
-        case "mist", "fog":
-            return "cloud.fog.fill"
-        default:
-            return "cloud.fill"
-        }
-    }
     
     var body: some View {
         HStack(spacing: 0) {
@@ -72,7 +37,7 @@ struct DailyForecastRow: View {
                 HStack(spacing: 8) {
                     
                     // Low temp
-                    Text("\(Int(item.main.tempMin))°")
+                    Text(tempSettings.format(item.main.tempMin))
                         .font(.body)
                         .foregroundStyle(.white)
                         .frame(width: 35, alignment: .trailing)
@@ -89,7 +54,7 @@ struct DailyForecastRow: View {
                         .frame(width: 80, height: 4)
                     
                     // High temp
-                    Text("\(Int(item.main.tempMax))°")
+                    Text(tempSettings.format(item.main.tempMax))
                         .font(.body)
                         .fontWeight(.semibold)
                         .foregroundStyle(.white)
@@ -100,7 +65,43 @@ struct DailyForecastRow: View {
             .padding(.horizontal, 16)
             .background(.white.opacity(0.1))
             .cornerRadius(12)
-            
+        }
+    }
+    //MARK: Day Of Week
+    private var dayOfWeek: String {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let itemDate = calendar.startOfDay(for: item.date)
+        
+        if today == itemDate {
+            return "Today"
+        }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EE" // Full day name
+        return formatter.string(from: item.date)
+    }
+    //MARK: Weather Icon
+    private var weatherIcon: String {
+        guard let main = item.weather.first?.main else { return "cloud.fill" }
+        
+        switch main.lowercased() {
+        case "clear":
+            return "sun.max.fill"
+        case "clouds":
+            return "cloud.fill"
+        case "rain":
+            return "cloud.rain.fill"
+        case "drizzle":
+            return "cloud.drizzle.fill"
+        case "thunderstorm":
+            return "cloud.bolt.fill"
+        case "snow":
+            return "cloud.snow.fill"
+        case "mist", "fog":
+            return "cloud.fog.fill"
+        default:
+            return "cloud.fill"
         }
     }
 }

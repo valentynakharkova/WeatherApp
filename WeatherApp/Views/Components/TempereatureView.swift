@@ -11,6 +11,8 @@ struct TempereatureView: View {
     
     let weather: WeatherData
     
+    @ObservedObject private var tempSettings = TemperatureSettings.shared
+    
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -18,17 +20,17 @@ struct TempereatureView: View {
                     .font(.system(size: 35, weight: .medium))
                     .foregroundStyle(.white)
                     .padding(.top, 60)
-                Text("\(Int(weather.main.temp))°")
+                Text(tempSettings.format(weather.main.temp))
                     .font(.system(size: 100, weight: .thin))
                     .foregroundStyle(.white)
             
-                Text("Feels like: \(Int(weather.main.feelsLike))°")
+                Text("Feels like: \(tempSettings.format(weather.main.feelsLike))")
                     .font(.headline)
                     .foregroundStyle(.white)
                 
                 HStack(spacing: 10) {
-                    Text("H: \(Int(weather.main.tempMax))°")
-                    Text("L: \(Int(weather.main.tempMin))°")
+                    Text("H: \(tempSettings.format(weather.main.tempMax))")
+                    Text("L: \(tempSettings.format(weather.main.tempMin))")
                 }
                 .font(.headline)
                 .foregroundStyle(.white)
