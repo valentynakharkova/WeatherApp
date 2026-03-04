@@ -19,13 +19,13 @@ struct BackgroundGradient: View {
             )
             .ignoresSafeArea()
     }
-    
+    //MARK: Gradient Type
     enum GradientType {
         case day
         case cloudy
         case night
     }
-    
+    //MARK: Time Based Gradient
     private func timeBasedGradient() -> GradientType {
         let hour = Calendar.current.component(.hour, from: Date())
         
@@ -35,7 +35,7 @@ struct BackgroundGradient: View {
             return .day
         }
     }
-    
+    //MARK: Gradient Type
     private var gradientType: GradientType {
         guard let weather = weather else {
             return timeBasedGradient()
@@ -61,7 +61,7 @@ struct BackgroundGradient: View {
         
         return .day
     }
-    
+    //MARK: Gradient Colors
     private var gradientColors: [Color] {
         switch gradientType {
         case .day:

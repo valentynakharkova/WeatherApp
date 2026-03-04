@@ -16,14 +16,13 @@ class WeatherViewModel: ObservableObject {
     
     @Published var searchResults: [GeocodingData] = []
     @Published var isSearching: Bool = false
-    
     @Published var forecastData: ForecastData?
-    
+
     @Published var savedCitiesWeather: [String : WeatherData] = [:]
     @Published var savedCitiesForecast: [String : ForecastData] = [:]
     
     private let weatherService = WeatherService()
-    
+    //MARK: Get Weather (city)
     func getWeather(for city: String) {
         Task {
             isLoading = true
@@ -38,7 +37,7 @@ class WeatherViewModel: ObservableObject {
             isLoading = false
         }
     }
-    
+    //MARK: Get Weather (lat; lon)
     func getWeather(lat: Double, lon: Double) {
         Task {
             isLoading = true
@@ -59,7 +58,7 @@ class WeatherViewModel: ObservableObject {
             isLoading = false
         }
     }
-    
+    //MARK: Search Cities
     func searchCities(query: String) {
         Task {
             isSearching = true
@@ -73,11 +72,11 @@ class WeatherViewModel: ObservableObject {
             isSearching = false
         }
     }
-    
+    //MARK: Clear Search
     func clearSearch() {
         searchResults = []
     }
-    
+    //MARK: Load Cities Weather
     func loadCitiesWeather(city: GeocodingData) async {
         do {
             async let weatherTask = weatherService.fetchWeather(lat: city.lat, lon: city.lon)
@@ -88,11 +87,11 @@ class WeatherViewModel: ObservableObject {
             savedCitiesWeather[city.id] = weather
             savedCitiesForecast[city.id] = forecast
             
-            print("✅ Saved weather for: \(city.name), id: \(city.id)")
-            print("📦 All keys: \(savedCitiesWeather.keys)")
+            print("Saved weather for: \(city.name), id: \(city.id)")
+            print("All keys: \(savedCitiesWeather.keys)")
             
         } catch {
-            print("❌ Error fetching weather for \(city.name): \(error)")
+            print("Error fetching weather for \(city.name): \(error)")
         }
     }
 }

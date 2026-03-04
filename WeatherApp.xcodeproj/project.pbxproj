@@ -32,6 +32,7 @@
 		D03C20312F3DE278004E6E8C /* WeatherAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D03C203B2F3DE278004E6E8C /* WeatherAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0C0F9AC2F3F29E700F63D68 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		D0DC910E2F585EB30028D319 /* WeatherApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = WeatherApp.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -80,6 +81,7 @@
 		D03C201B2F3DE276004E6E8C = {
 			isa = PBXGroup;
 			children = (
+				D0DC910E2F585EB30028D319 /* WeatherApp.xctestplan */,
 				D0C0F9AC2F3F29E700F63D68 /* .gitignore */,
 				D03C20262F3DE276004E6E8C /* WeatherApp */,
 				D03C20342F3DE278004E6E8C /* WeatherAppTests */,
@@ -475,7 +477,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 36S6RZ78BM;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.valentynakharkova.WeatherAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -497,7 +499,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 36S6RZ78BM;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.valentynakharkova.WeatherAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

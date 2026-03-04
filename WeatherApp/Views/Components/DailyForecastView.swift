@@ -22,13 +22,10 @@ struct DailyForecastView: View {
                     DailyForecastRow(item: item)
                 }
             }
-//            .padding()
-//            .padding(.horizontal, 20)
-            
         }
         .padding()
     }
-    
+    //MARK: Get Daily Forecast
     private func getDailyForecast() -> [ForecastItem] {
         var dailyForecasts: [ForecastItem] = []
         var seenDates: Set<String> = []
@@ -36,7 +33,7 @@ struct DailyForecastView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
-        //MARK: Get one forecast per day (around noon time)
+        // Get one forecast per day (around noon time)
         for item in forecast.list {
             let dateString = dateFormatter.string(from: item.date)
             
@@ -46,9 +43,7 @@ struct DailyForecastView: View {
                 seenDates.insert(dateString)
             }
         }
-        
         return Array(dailyForecasts.prefix(5))
-        
     }
 }
 

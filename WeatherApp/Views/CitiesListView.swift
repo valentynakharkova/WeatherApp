@@ -15,42 +15,51 @@ struct CitiesListView: View {
     @ObservedObject private var citiesManager = SavedCityManager.shared
     
     @Binding var selectedCityIndex: Int
+    
     @State private var searchQuery: String = ""
     
     var body: some View {
         ZStack(alignment: .top) {
-                // background
+            // Background
+            Group {
                 if let currentWeather = currentCityWeather {
                     BackgroundGradient(weather: currentWeather)
                 } else {
                     BackgroundGradient()
                 }
-                VStack(spacing: 30) {
-                    searchBar
-                        .padding(.top, 16)
-                    ScrollView {
-                        if !viewModel.searchResults.isEmpty {
-                            searchResults
-//                                .listRowBackground(Color(.clear))
-//                                .listRowSeparator(.hidden)
-//                                .listRowInsets(EdgeInsets())
-                        } else if citiesManager.savedCities.isEmpty {
-                            emptyState
-//                                .listRowBackground(Color(.clear))
-//                                .listRowSeparator(.hidden)
-//                                .frame(maxWidth: .infinity)
-//                                .padding(.top, 60)
-                        } else {
-                            citiesList
-//                                .listRowBackground(Color(.clear))
-//                                .listRowSeparator(.hidden)
-                        }
-                    }
-                    .padding(.horizontal)
-//                    .listStyle(.plain)
-//                    .scrollContentBackground(.hidden)
-                }
             }
+            .animation(.easeInOut(duration: 0.6), value: selectedCityIndex)
+            
+            // Main VStack
+            VStack(spacing: 30) {
+                searchBar
+                    .padding(.top, 16)
+                List {
+                    if !viewModel.searchResults.isEmpty {
+                        searchResults
+                            .listRowBackground(Color(.clear))
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets())
+                    } else if citiesManager.savedCities.isEmpty {
+                        emptyState
+                            .listRowBackground(Color(.clear))
+                            .listRowSeparator(.hidden)
+                            .frame(maxWidth: .infinity)
+                            .padding(.top, 60)
+                    } else {
+                        citiesList
+                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: 12))
+                            .listRowBackground(Color(.clear))
+                            .listRowSeparator(.hidden)
+                            .scrollContentBackground(.hidden)
+                        
+                    }
+                }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .listRowBackground(Color(.clear))
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("WEATHER")
@@ -112,19 +121,39 @@ struct CitiesListView: View {
     // MARK: Cities List
     private var citiesList: some View {
         ForEach(citiesManager.savedCities) { city in
-            if let weather = viewModel.savedCitiesWeather[city.id] {
-                CityRow(city: city,weather: weather) {
-                    if let index = citiesManager.savedCities.firstIndex(where: {$0.id == city.id}) {
-                            selectedCityIndex = index
-                            dismiss()
-                        }
+            Group {
+                if let weather = viewModel.savedCitiesWeather[city.id] {
+                    CityRow(
+                        city: city,
+                        weather: weather,
+                        onTap: {
+                            if let index = citiesManager.savedCities.firstIndex(
+                                where: { $0.id == city.id }) {
+                                selectedCityIndex = index
+                                dismiss()
+                            }
+                        }, onDelete: {
+                            if let index = citiesManager.savedCities.firstIndex(
+                                where: { $0.id == city.id }) {
+                                deleteCity(at: IndexSet([index]))
+                            }
+                    })
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    
+                } else {
+                    loadingRow(for: city)
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
                 }
-            } else {
-                loadingRow(for: city)
             }
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
         }
+        .onMove(perform: moveCity)
         .onDelete(perform: deleteCity)
-        .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+        
     }
     
     //MARK: Delete City
@@ -133,12 +162,22 @@ struct CitiesListView: View {
             let city = citiesManager.savedCities[index]
             citiesManager.removeCity(city)
         }
-        
         // Safety check: Ensure selectedCityIndex isn't out of bounds after deletion
         if selectedCityIndex >= citiesManager.savedCities.count {
             selectedCityIndex = max(0, citiesManager.savedCities.count - 1)
         }
     }
+    
+    //MARK: Move City
+    private func moveCity(from sourse: IndexSet, to destination: Int) {
+        let selectedCity = selectedCityIndex < citiesManager.savedCities.count ? citiesManager.savedCities[selectedCityIndex] : nil
+        citiesManager.moveCity(from: sourse, to: destination)
+        if let selected = selectedCity, let newIndex = citiesManager.savedCities.firstIndex(where: { $0.id == selected.id }) {
+            selectedCityIndex = newIndex
+        }
+    }
+    
+    //MARK: Loading Row
     private func loadingRow(for city: GeocodingData) -> some View {
         HStack {
             Text(city.name)
@@ -208,6 +247,11 @@ struct CitiesListView: View {
         guard selectedCityIndex < citiesManager.savedCities.count else { return nil }
         let city = citiesManager.savedCities[selectedCityIndex]
         return viewModel.savedCitiesWeather[city.id]
+    }
+    
+    private func configureListAppearance() {
+        UITableView.appearance().backgroundColor = .clear
+        UITableViewCell.appearance().backgroundColor = .clear
     }
 }
 

@@ -25,7 +25,6 @@ struct HourlyForecastView: View {
                     }
                 }
                 .padding(.horizontal, 5)
-
             }
         }
     }
