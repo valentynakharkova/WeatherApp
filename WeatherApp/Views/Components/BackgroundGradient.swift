@@ -43,7 +43,6 @@ struct BackgroundGradient: View {
         // For Testing
         let now = Date(timeIntervalSince1970: TimeInterval(weather.dt))
         //For Production
-//        let now = Date()
         let sunriseDate = Date(timeIntervalSince1970: TimeInterval(weather.sys.sunrise))
         let sunsetDate = Date(timeIntervalSince1970: TimeInterval(weather.sys.sunset))
         

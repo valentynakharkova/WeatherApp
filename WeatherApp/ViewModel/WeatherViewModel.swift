@@ -88,8 +88,11 @@ class WeatherViewModel: ObservableObject {
             savedCitiesWeather[city.id] = weather
             savedCitiesForecast[city.id] = forecast
             
+            print("✅ Saved weather for: \(city.name), id: \(city.id)")
+            print("📦 All keys: \(savedCitiesWeather.keys)")
+            
         } catch {
-            print("Error fetching weather for city: \(error)")
+            print("❌ Error fetching weather for \(city.name): \(error)")
         }
     }
 }
