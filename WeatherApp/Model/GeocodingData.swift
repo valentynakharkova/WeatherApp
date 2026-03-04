@@ -8,7 +8,7 @@
 import Foundation
 
 //MARK: Geocoding Data
-struct GeocodingData: Codable, Identifiable {
+struct GeocodingData: Codable, Identifiable, Equatable {
     let name: String
     let localNames: [String: String]?
     let lat: Double
@@ -37,13 +37,13 @@ struct GeocodingData: Codable, Identifiable {
     }
     
     init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            name = try container.decode(String.self, forKey: .name)
-            localNames = try? container.decode([String: String].self, forKey: .localNames)
-            lat = try container.decode(Double.self, forKey: .lat)
-            lon = try container.decode(Double.self, forKey: .lon)
-            country = try container.decode(String.self, forKey: .country)
-            state = try? container.decode(String.self, forKey: .state)
-        }
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        localNames = try? container.decode([String: String].self, forKey: .localNames)
+        lat = try container.decode(Double.self, forKey: .lat)
+        lon = try container.decode(Double.self, forKey: .lon)
+        country = try container.decode(String.self, forKey: .country)
+        state = try? container.decode(String.self, forKey: .state)
+    }
 }
 

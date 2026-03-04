@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+//MARK: Date
 extension Date {
     func formatted(as format: String) -> String {
         let formatter = DateFormatter()
@@ -20,7 +20,7 @@ extension Date {
         return formatter.string(from: self)
     }
 }
-
+//MARK: Int
 extension Int {
     func toDate() -> Date {
         return Date(timeIntervalSince1970: TimeInterval(self))

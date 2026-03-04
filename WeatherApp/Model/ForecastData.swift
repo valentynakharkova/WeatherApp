@@ -32,7 +32,7 @@ struct ForecastItem: Codable, Identifiable {
     
     var id: Int { dt }
     
-    //MARK: Helper to convert timestamp to Date
+    //MARK: Helper to convert Timestamp to Date
     var date: Date {
         Date(timeIntervalSince1970: TimeInterval(dt))
     }
@@ -43,6 +43,7 @@ struct ForecastItem: Codable, Identifiable {
     }
 }
 
+//MARK: Forecast Main
 struct ForecastMain: Codable {
     let temp, feelsLike, tempMin, tempMax: Double
     let pressure, seaLevel, grndLevel, humidity: Int
@@ -61,7 +62,7 @@ struct ForecastMain: Codable {
     }
 }
 
-//MARK: ForecastSys
+//MARK: Forecast Sys
 struct ForecastSys: Codable {
     let pod: String
 }

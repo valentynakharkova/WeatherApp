@@ -7,6 +7,7 @@
 
 import Foundation
 
+//MARK: Weather Service
 class WeatherService {
     private let apiKey = "e2a516767ae4897d82bcbfedb7f417ba"
     private let baseURL = "https://api.openweathermap.org/data/2.5/weather"
@@ -24,7 +25,7 @@ class WeatherService {
         return weatherData
     }
     
-    // MARK: Fetch current wether by coordinates (lat/lon)
+    // MARK: Fetch Current Weather by coordinates (lat/lon)
     func fetchWeather(lat: Double, lon: Double) async throws -> WeatherData {
         let urlString = "\(baseURL)?lat=\(lat)&lon=\(lon)&appid=\(apiKey)&units=metric"
         guard let url = URL(string: urlString) else {
@@ -33,9 +34,9 @@ class WeatherService {
         let (data, _) = try await URLSession.shared.data(from: url)
         
         if let jsonString = String(data: data, encoding: .utf8) {
-                print("🌤️ Weather API Response:")
-                print(jsonString)
-            }
+            print("🌤️ Weather API Response:")
+            print(jsonString)
+        }
         
         let weatherData = try JSONDecoder().decode(WeatherData.self, from: data)
         
@@ -54,9 +55,9 @@ class WeatherService {
         let (data, _) = try await URLSession.shared.data(from: url)
         
         if let jsonString = String(data: data, encoding: .utf8) {
-                print("🔍 Geocoding API Response:")
-                print(jsonString)
-            }
+            print("🔍 Geocoding API Response:")
+            print(jsonString)
+        }
         
         let cities = try JSONDecoder().decode([GeocodingData].self, from: data)
         
@@ -72,17 +73,14 @@ class WeatherService {
         let (data, _) = try await URLSession.shared.data(from: url)
         
         // DEBUG: Print the raw response
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("📅 Forecast API Response:")
-                print(jsonString)
-            }
+        if let jsonString = String(data: data, encoding: .utf8) {
+            print("📅 Forecast API Response:")
+            print(jsonString)
+        }
         
         let forecastData = try JSONDecoder().decode(ForecastData.self, from: data)
         
         return forecastData
     }
-    
-    
-    
 }
 

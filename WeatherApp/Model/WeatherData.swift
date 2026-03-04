@@ -24,6 +24,16 @@ struct WeatherData: Codable {
     let name: String
     let cod: Int
 }
+//MARK: Extension Weather Data
+extension WeatherData {
+    func formatTime(_ timestamp: Int) -> String {
+        let date = Date(timeIntervalSince1970: Double(timestamp + timezone))
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        formatter.timeZone = TimeZone(identifier: "UTC")
+        return formatter.string(from: date)
+    }
+}
 
 //MARK: Coord
 struct Coord: Codable {
@@ -36,7 +46,7 @@ struct Weather: Codable {
     let main, description, icon: String
 }
 
-//MARK:
+//MARK: Main
 struct Main: Codable {
     let temp, feelsLike, tempMin, tempMax: Double
     let pressure, humidity, seaLevel, grndLevel: Int
@@ -91,3 +101,4 @@ struct Snow: Codable {
         case threeHours = "3h"
     }
 }
+
