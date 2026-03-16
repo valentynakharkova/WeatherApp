@@ -43,6 +43,7 @@ A clean and minimal iOS weather app built with SwiftUI.
 ## Weather App Video Screenshot
 ![Image](https://github.com/user-attachments/assets/7f308744-64f5-42f0-8417-db2009465e3e)
 
+https://github.com/user-attachments/assets/7922d326-9dbb-43c0-9ec9-a43c56eb0dde
 
 ## Features
 - 🔍 Search cities worldwide
