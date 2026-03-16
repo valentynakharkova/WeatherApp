@@ -4,8 +4,7 @@ A clean and minimal iOS weather app built with SwiftUI.
 
 ## Screenshots
 <!-- Add your screenshots here -->
-
-file:///Users/valentynakharkova/Downloads/Icon.jpeg
+![Image](https://github.com/user-attachments/assets/c109e8f8-5c96-405a-b144-b92fd6a50423)
 
 
 ## Features
