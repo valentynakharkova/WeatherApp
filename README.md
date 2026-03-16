@@ -5,6 +5,9 @@ A clean and minimal iOS weather app built with SwiftUI.
 ## Screenshots
 <!-- Add your screenshots here -->
 
+file:///Users/valentynakharkova/Downloads/Icon.jpeg
+
+
 ## Features
 - 🔍 Search cities worldwide
 - 📍 5-day weather forecast
