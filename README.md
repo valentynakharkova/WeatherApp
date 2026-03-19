@@ -13,7 +13,7 @@ metrics like humidity, wind speed, and pressure.
 
 ## Screenshots
 
-## Icon
+### Icon
 ![Image](https://github.com/user-attachments/assets/c109e8f8-5c96-405a-b144-b92fd6a50423)
 
 ## Weather View
