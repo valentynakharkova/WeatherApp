@@ -7,13 +7,21 @@
 
 import Foundation
 
-//MARK: Weather Service
+/// Service responsible for all network requests to the OpenWeatherMap API.
+/// Handles fetching current weather, 5-day forecasts, and city search.
+
 class WeatherService {
+    
+    // MARK: - Private Properties
     private let apiKey = "e2a516767ae4897d82bcbfedb7f417ba"
     private let baseURL = "https://api.openweathermap.org/data/2.5/weather"
     
+    // MARK: - Weather
+    /// Fetches current weather data for a city by name.
+    /// - Parameter city: The name of the city (e.g. "Kyiv")
+    /// - Returns: A `WeatherData` object with current weather conditions
+    /// - Throws: A network or JSON decoding error
     func fetchWeather(for city: String) async throws -> WeatherData {
-        
         let urlString = "\(baseURL)?q=\(city)&appid=\(apiKey)&units=metric"
         guard let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") else {
             throw NSError(domain: "Invalid URL", code: 0)
@@ -25,7 +33,12 @@ class WeatherService {
         return weatherData
     }
     
-    // MARK: Fetch Current Weather by coordinates (lat/lon)
+    /// Fetches a 5-day weather forecast with 3-hour intervals.
+    /// - Parameters:
+    /// - lat: The latitude of the city
+    /// - lon: The longitude of the city
+    /// - Returns: A `ForecastData` object containing the 5-day forecast
+    /// - Throws: A network or JSON decoding error
     func fetchWeather(lat: Double, lon: Double) async throws -> WeatherData {
         let urlString = "\(baseURL)?lat=\(lat)&lon=\(lon)&appid=\(apiKey)&units=metric"
         guard let url = URL(string: urlString) else {
@@ -43,7 +56,12 @@ class WeatherService {
         return weatherData
     }
     
-    //MARK: Search for cities using Geocoding API
+    //MARK: - Search
+    /// Searches for cities matching the given query using the Geocoding API.
+    /// Returns up to 5 results with coordinates for each city.
+    /// - Parameter query: The search string (minimum 2 characters)
+    /// - Returns: An array of `GeocodingData` objects matching the query
+    /// - Throws: A network or JSON decoding error
     func searchCities(query: String) async throws -> [GeocodingData] {
         guard query.count >= 2 else {
             return []
@@ -64,7 +82,14 @@ class WeatherService {
         return cities
     }
     
-    //MARK: Fetch 5 day forecast by coordinates
+    //MARK: - Forecast
+    /// Fetches a 5-day weather forecast with 3-hour intervals.
+    /// - Parameters:
+    /// - lat: The latitude of the city
+    /// - lon: The longitude of the city
+    /// - Returns: A `ForecastData` object containing the 5-day forecast
+    /// - Throws: A network or JSON decoding error
+
     func fetchForecast(lat: Double, lon: Double) async throws -> ForecastData {
         let urlString = "https://api.openweathermap.org/data/2.5/forecast?lat=\(lat)&lon=\(lon)&appid=\(apiKey)&units=metric"
         guard let url = URL(string: urlString) else {
