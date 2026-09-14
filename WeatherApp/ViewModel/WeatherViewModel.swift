@@ -8,57 +8,36 @@
 import Foundation
 import Combine
 
+/// ViewModel responsible for managing weather data and city search.
+/// Follows the MVVM architecture pattern and runs on the main actor
+/// to ensure all UI updates happen on the main thread.
+
 @MainActor
 class WeatherViewModel: ObservableObject {
-    @Published var weatherData: WeatherData?
-    @Published var isLoading: Bool = false
-    @Published var errorMessage: String?
     
+    // MARK: - Published Properties
+    
+    /// Indicates whether a network request is in progress
+    @Published var isLoading: Bool = false
+    /// Contains an error message if a network request fails
+    @Published var errorMessage: String?
+    /// List of cities returned from the geocoding search
     @Published var searchResults: [GeocodingData] = []
+    /// Indicates whether a city search is in progress
     @Published var isSearching: Bool = false
-    @Published var forecastData: ForecastData?
-
+    /// Dictionary mapping city ID to its current weather data
     @Published var savedCitiesWeather: [String : WeatherData] = [:]
+    /// Dictionary mapping city ID to its forecast data
     @Published var savedCitiesForecast: [String : ForecastData] = [:]
     
+    // MARK: - Private Properties
+    /// Model 
     private let weatherService = WeatherService()
-    //MARK: Get Weather (city)
-    func getWeather(for city: String) {
-        Task {
-            isLoading = true
-            errorMessage = nil
-            
-            do {
-                let data = try await weatherService.fetchWeather(for: city)
-                weatherData = data
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
-        }
-    }
-    //MARK: Get Weather (lat; lon)
-    func getWeather(lat: Double, lon: Double) {
-        Task {
-            isLoading = true
-            errorMessage = nil
-            
-            do {
-                //MARK: Fetch both weather and forecast in parralel
-                async let weatherTask = try await weatherService.fetchWeather(lat: lat, lon: lon)
-                async let forecastTask = try await weatherService.fetchForecast(lat: lat, lon: lon)
-                
-                let (weather, forecast) = try await (weatherTask, forecastTask)
-                
-                weatherData = weather
-                forecastData = forecast
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
-        }
-    }
-    //MARK: Search Cities
+    
+    // MARK: - Search
+    /// Searches for cities matching the given query.
+    /// Results are stored in `searchResults` and displayed in the search list.
+    /// - Parameter query: The search string entered by the user
     func searchCities(query: String) {
         Task {
             isSearching = true
@@ -72,11 +51,18 @@ class WeatherViewModel: ObservableObject {
             isSearching = false
         }
     }
-    //MARK: Clear Search
+    
+    /// Clears the current search results.
+    /// Called when the search field is cleared or dismissed.
     func clearSearch() {
         searchResults = []
     }
-    //MARK: Load Cities Weather
+    
+    // MARK: - Saved Cities
+    /// Loads weather and forecast data for a saved city in parallel.
+    /// Results are stored in `savedCitiesWeather` and `savedCitiesForecast`
+    /// using the city's unique ID as the key.
+    /// - Parameter city: The `GeocodingData` object representing the city to load
     func loadCitiesWeather(city: GeocodingData) async {
         do {
             async let weatherTask = weatherService.fetchWeather(lat: city.lat, lon: city.lon)

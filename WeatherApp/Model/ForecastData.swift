@@ -8,6 +8,8 @@
 import Foundation
 
 //MARK: Forecast Data
+/// Root model representing the 5-day forecast response from OpenWeatherMap API.
+/// Contains a list of forecast items in 3-hour intervals and city metadata.
 struct ForecastData: Codable {
     let cod: String
     let message: Int
@@ -17,6 +19,7 @@ struct ForecastData: Codable {
 }
 
 //MARK: Forecast Item
+/// A single forecast entry representing weather conditions at a specific point in time.
 struct ForecastItem: Codable, Identifiable {
     let dt: Int
     let main: ForecastMain
@@ -44,6 +47,7 @@ struct ForecastItem: Codable, Identifiable {
 }
 
 //MARK: Forecast Main
+/// Temperature and atmospheric data for a single forecast entry.
 struct ForecastMain: Codable {
     let temp, feelsLike, tempMin, tempMax: Double
     let pressure, seaLevel, grndLevel, humidity: Int
@@ -63,11 +67,13 @@ struct ForecastMain: Codable {
 }
 
 //MARK: Forecast Sys
+/// Part of day indicator for a forecast entry.
 struct ForecastSys: Codable {
     let pod: String
 }
 
 //MARK: City
+/// Metadata about the city associated with the forecast.
 struct City: Codable {
     let id: Int
     let name: String

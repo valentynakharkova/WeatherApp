@@ -71,7 +71,7 @@ struct WeatherView: View {
                 }
             }
             .toolbar {
-                //MARK: Cities List button
+                //MARK: Toolbar: Cities List button
                 ToolbarItem(placement: .topBarLeading) {
                     NavigationLink(value: "citiesList") {
                         Image(systemName: "list.bullet")
@@ -80,7 +80,7 @@ struct WeatherView: View {
                         CitiesListView(viewModel: viewModel, selectedCityIndex: $selectedCityIndex)
                     }
                 }
-                //MARK: Popover Button
+                //MARK: Toolbar: Popover Button
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showPopover = true
@@ -94,33 +94,37 @@ struct WeatherView: View {
                                 tempSettings.unit = .celsius
                                 showPopover = false
                             } label: {
-                                HStack(spacing: 10) {
+                                HStack(spacing: 15) {
                                     Image(systemName: "degreesign.celsius")
                                         .font(.callout)
                                         .fontWeight(.semibold)
                                         .frame(width: 20)
                                     Text("Celsius")
                                         .font(.title3)
+                                        .fontWeight(.light)
                                     
                                 }
-                                .padding(.horizontal, 24)
-                                .padding(.vertical, 10)
                             }
+                            .padding(.top, 8)
+                            .padding()
+                            
                             Button {
                                 tempSettings.unit = .fahrenheit
                                 showPopover = false
                             } label: {
-                                HStack(spacing: 10) {
+                                HStack(spacing: 15) {
                                     Image(systemName: "degreesign.fahrenheit")
                                         .font(.callout)
                                         .fontWeight(.semibold)
                                         .frame(width: 20)
                                     Text("Fahrenheit")
                                         .font(.title3)
+                                        .fontWeight(.light)
                                 }
-                                .padding(.horizontal, 24)
-                                .padding(.vertical, 10)
+                                
                             }
+                            .padding(.bottom, 8)
+                            .padding()
                         }
                         .foregroundStyle(.primary)
                         .presentationCompactAdaptation(.popover)

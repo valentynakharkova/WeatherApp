@@ -11,6 +11,8 @@ struct WeatherDetailsGrid: View {
     
     let weather: WeatherData
     
+    @ObservedObject private var tempSettings = TemperatureSettings.shared
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("WEATHER DETAILS")
@@ -24,7 +26,7 @@ struct WeatherDetailsGrid: View {
                 WeatherDetailCard(
                     icon: "thermometer.medium",
                     title: "Feels like",
-                    value: "\(Int(weather.main.feelsLike))°"
+                    value: "\(tempSettings.format(weather.main.feelsLike))"
                 )
                 WeatherDetailCard(
                     icon: "eye.fill",

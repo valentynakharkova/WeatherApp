@@ -8,6 +8,8 @@
 import Foundation
 
 //MARK: Geocoding Data
+/// Represents a city returned from the OpenWeatherMap Geocoding API.
+/// Used for city search results and storing saved cities.
 struct GeocodingData: Codable, Identifiable, Equatable {
     let name: String
     let localNames: [String: String]?
@@ -16,12 +18,15 @@ struct GeocodingData: Codable, Identifiable, Equatable {
     let country: String
     let state: String?
     
-    //MARK: For SwiftUI List - makes each item unique
+    // MARK: - Computed Properties
+    /// A unique identifier combining name, country and coordinates.
+    /// Ensures cities with the same name in different countries are treated as distinct.
     var id: String {
         "\(name)-\(country)-\(String(format: "%.4f", lat))-\(String(format: "%.4f", lon))"
     }
     
-    //MARK: Display name with country
+    /// A human-readable display name including state and country.
+    /// Example: "Kyiv, UA" or "Zaporizhzhia, Zaporizhzhia Oblast, UA"
     var displayName: String {
         if let state = state {
             return "\(name), \(state), \(country)"
@@ -30,12 +35,14 @@ struct GeocodingData: Codable, Identifiable, Equatable {
         }
     }
     
+    // MARK: - Coding Keys
     enum CodingKeys: String, CodingKey {
         case name
         case localNames = "local_names"
         case lat, lon, country, state
     }
     
+    // MARK: - Init
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
